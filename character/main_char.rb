@@ -7,11 +7,14 @@ Window.caption = "RubyCamp Example"
 Window.width   = 800
 Window.height  = 600
 
-director = Director.new
+director = Director.instance
+
 
 
 Window.loop do
   break if Input.keyPush?(K_ESCAPE)
 
   director.play
+  
+  
 end
