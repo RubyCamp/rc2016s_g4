@@ -12,6 +12,7 @@ module Game
     def initialize
       @char = Character.new(400, 300, "images/char.png")
       @bg_img = Image.load("images/background.png")
+      @game_over = false
     
       @lwalls = []
       8.times.each do |i|
@@ -52,7 +53,7 @@ module Game
       @scroll.draw
 
       if Input.keyPush?(K_RETURN)
-        if(@scroll.move_flag == true)
+        if @scroll.move_flag == true
           @scroll.move_stop
 
           8.times.each do |i|
@@ -71,36 +72,65 @@ module Game
           @next_upwalls.move_stop
 
           @third_walls.move_stop
-          
-        else
-          @scroll.move_start
-          8.times.each do |i|
-            @upwalls[i].move_start
-          end
-          8.times.each do |i|
-            @lwalls[i].move_start
-          end
-          10.times.each do |i|
-            @items[i].move_start
-          end
-          @next_dowalls.move_start
-          @next_upwalls.move_start
 
-          @third_walls.move_start
+          @char.move_stop
+          
+        # else
+        #   @scroll.move_start
+        #   8.times.each do |i|
+        #     @upwalls[i].move_start
+        #   end
+        #   8.times.each do |i|
+        #     @lwalls[i].move_start
+        #   end
+        #   10.times.each do |i|
+        #     @items[i].move_start
+        #   end
+        #   @next_dowalls.move_start
+        #   @next_upwalls.move_start
+
+        #   @third_walls.move_start
+        #   @char.move_start
         end
-      end 
+      end
+
+      #if Input.keyPush?(K_BACK) && scroll.move_flag == false
+        #@@current_scene_name = nil
+        #Scene.set_current_scene(:title)
+      #end
+
+      if Input.keyPush?(K_SPACE) && scroll.move_flag == false
+        @scroll.move_start
+        8.times.each do |i|
+          @upwalls[i].move_start
+        end
+        8.times.each do |i|
+          @lwalls[i].move_start
+        end
+        10.times.each do |i|
+          @items[i].move_start
+        end
+        @next_dowalls.move_start
+        @next_upwalls.move_start
+
+        @third_walls.move_start
+        @char.move_start
+      end        
+
 
       @char.move_loop
       @char.draw
       @char.move_key
       @char.draw
 
-      Sprite.update(@lwalls)
-      Sprite.update(@upwalls)
-      Sprite.update(@next_dowalls)
-      Sprite.update(@next_upwalls)
-      Sprite.update(@third_walls)
-      Sprite.update(@items)
+      unless game_over?
+        Sprite.update(@lwalls)
+        Sprite.update(@upwalls)
+        Sprite.update(@next_dowalls)
+        Sprite.update(@next_upwalls)
+        Sprite.update(@third_walls)
+        Sprite.update(@items)
+      end
 
       Sprite.draw(@items)
       Sprite.draw(@lwalls)
@@ -109,8 +139,20 @@ module Game
       Sprite.draw(@next_upwalls)
       Sprite.draw(@third_walls)
 
-      Sprite.check(@lwalls, @char)
+      Sprite.check([@lwalls, @upwalls, @next_upwalls, @next_dowalls, @third_walls], @char)
+      Sprite.check(@char, @items, :get_item)
       Sprite.clean(@char)
+
+      Window.drawFont(10,10, @char.item_count.to_s ,Font.new(60))
+    end
+
+    def game_over
+      @game_over = true
+      @scroll.move_stop
+    end
+
+    def game_over?
+      return @game_over
     end
   end
 end
