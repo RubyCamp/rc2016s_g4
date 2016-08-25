@@ -7,7 +7,6 @@ class Character < Sprite
     @vy = 1.5
     @ay = 1
     super(x,y,@image)
-
   end
 
   #落下
@@ -24,7 +23,6 @@ class Character < Sprite
   def move_key
     if Input.keyPush?(K_SPACE) then
       @vy = -15 
-
     end
   end
 
@@ -32,8 +30,7 @@ class Character < Sprite
   def hit(obj)
     @vy = 0
     @ay = 0
-    scroll = Director.instance.scroll
+    scroll = Game::Director.instance.scroll
     scroll.move_stop
-    #scroll.move_stop
   end
 end

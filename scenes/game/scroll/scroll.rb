@@ -1,8 +1,8 @@
 class Scroll
 	def initialize
 		@move_flag = false
-		@img1 = Image.load("../images/background.png")
-		@img2 = Image.load("../images/background.png")
+		@img1 = Image.load("images/background.png")
+		@img2 = Image.load("images/background.png")
 		@dx = 5		
 		@x1 = 0
 		@x2 = @img1.width
