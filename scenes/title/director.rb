@@ -16,7 +16,7 @@
 
 	  	def play
 	    	Window.draw(0,0,@bg_img)
-			Window.drawFont(@X,@Y,@title,@f)
+			Window.drawFont(@X,@Y,@title,@f,{:color => [255,255,0]})
 			if @sw == 0
 				@alp += 3
 				if @alp == 255
