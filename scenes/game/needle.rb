@@ -12,7 +12,7 @@ class Needle < Sprite
     y3 = HEIGHT
     @dx = 4
     image = Image.new(WIDTH,HEIGHT)
-    image.triangle_fill(x1,y1,x2,y2,x3,y3,[255,0,0])
+    image.triangle_fill(x1,y1,x2,y2,x3,y3,[100,100,100])
     super(x,y,image) #(0,400)からの相対距離を用いて判定
     self.collision = [x1,y1,x2,y2,x3,y3]
   end

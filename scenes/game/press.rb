@@ -11,7 +11,7 @@ class Press < Sprite
     x2 = WIDTH
     @height = 300
     image = Image.new(WIDTH,@height)
-    image.box_fill(x1,y1,x2,@height,[255,0,0])
+    image.box_fill(x1,y1,x2,@height,[100,100,100])
     super(x,y,image) #call sprite initialize
   end
 

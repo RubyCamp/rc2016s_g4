@@ -4,6 +4,10 @@ require_relative 'scroll'
 require_relative 'press'
 require_relative 'item'
 require_relative 'character'
+require_relative 'enemy_karasu'
+require_relative 'enemy_oni'
+require_relative 'enemy_ufo'
+
 
 module Game 
   class Director
@@ -20,6 +24,10 @@ module Game
       @next_upwalls = []
       @next_dowalls = []
       @third_walls = []
+
+      @enemy_karasus = []
+      @enemy_onis = []
+      @enemy_ufos = []
 
       @pos = 0
       @scroll = Scroll.new
@@ -54,18 +62,32 @@ module Game
         30.times do |i|
           @items << Item.new(rand((@pos)..(800 * 5 + @pos)), rand(200) + (200))
         end
+#########
+        10.times.each do
+			@enemy_karasus << Enemy_karasu.new(rand(800 * 5) + (800 * 3),rand(300) + 200)
+		end
+
+		5.times.each do
+			@enemy_onis << Enemy_oni.new(rand(800 * 5) + (800 * 4),rand(300) + 200)
+		end
+
+		5.times.each do
+			@enemy_ufos << Enemy_ufo.new(rand(800 * 5) + (800 * 4),rand(300) + 200)
+		end
+
       end
       @scroll.draw
 
-      if Input.keyPush?(K_RETURN)
-        @stop = true
+      # if Input.keyPush?(K_RETURN)
+      #   @stop = true
 
-        if @scroll.move_flag == true
-          @scroll.move_stop
-        end
-      end
+      #   if @scroll.move_flag == true
+      #     @scroll.move_stop
+      #   end
+      # end
 
       if Input.keyPush?(K_RETURN)
+      	@stop = true
         if @scroll.move_flag == true
           @scroll.move_stop
 
@@ -80,6 +102,19 @@ module Game
           10.times.each do |i|
             @items[i].move_stop
           end
+
+          10.times.each do |i|
+            @enemy_karasus[i].move_stop
+          end
+
+		5.times.each do |i|
+            @enemy_onis[i].move_stop
+          end
+
+		5.times.each do |i|
+            @enemy_ufos[i].move_stop
+          end
+
 
           @next_dowalls.move_stop
           @next_upwalls.move_stop
@@ -111,20 +146,26 @@ module Game
         Sprite.update(@next_upwalls)
         Sprite.update(@third_walls)
         Sprite.update(@items)
+      	Sprite.update(@enemy_karasus)
+		Sprite.update(@enemy_onis)
+		Sprite.update(@enemy_ufos)
       end
 
       Sprite.draw(@items)
+      Sprite.draw(@enemy_karasus)
+	Sprite.draw(@enemy_onis)
+			Sprite.draw(@enemy_ufos)
       Sprite.draw(@lwalls)
       Sprite.draw(@upwalls)
       Sprite.draw(@next_dowalls)
       Sprite.draw(@next_upwalls)
       Sprite.draw(@third_walls)
 
-      Sprite.check([@lwalls, @upwalls, @next_upwalls, @next_dowalls, @third_walls], @char)
+      Sprite.check([@lwalls, @upwalls, @next_upwalls, @next_dowalls, @third_walls, @enemy_karasus, @enemy_onis, @enemy_ufos], @char)
       Sprite.check(@char, @items, :get_item)
       Sprite.clean(@char)
 
-      Window.drawFont(10,10, @char.item_count.to_s ,Font.new(60))
+      Window.drawFont(10,10, "SCORE "+ @char.item_count.to_s,Font.new(40))
     end
 
     def game_over
