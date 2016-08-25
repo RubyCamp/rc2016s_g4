@@ -5,16 +5,14 @@ class Character < Sprite
   def initialize(x, y, image_file)
     @move_flag = true
     @image = Image.load(image_file)
-    @image.set_color_key([255, 255, 255])
+    @image.set_color_key([0, 0, 0])
     @vy = 1.5
     @ay = 1
     super(x,y,@image)
     @game_over = false
-    @item_count = 0
-  end
-
-  #始め（説明）
-  def move_st
+    $item_count = 0
+    @hit_bgm = Sound.new("musics/out.wav")
+    @get_bgm = Sound.new("musics/jewelry.wav")
   end
 
   #落下
@@ -46,16 +44,17 @@ class Character < Sprite
 
   #ぶつかったか判定
   def hit(obj)
+    @hit_bgm.play
     @vy = 0
-    #@ay = 0
     Game::Director.instance.game_over
     @game_over = true
     Scene.set_current_scene(:game_over)
   end
 
   def get_item(item)
-    @item_count += 1
-    p @item_count
+    @get_bgm.play
+    $item_count += 1
+    p $item_count
   end
 
   def move_stop
