@@ -99,7 +99,7 @@ module Game
         #Scene.set_current_scene(:title)
       #end
 
-      if Input.keyPush?(K_SPACE) && scroll.move_flag == false
+      if Input.keyPush?(K_SPACE) && scroll.move_flag == false && @game_over == false
         @scroll.move_start
         8.times.each do |i|
           @upwalls[i].move_start
