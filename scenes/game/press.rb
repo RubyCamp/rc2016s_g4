@@ -1,7 +1,7 @@
 class Press < Sprite
   WIDTH = 800 #yoko
 
-  def initialize(x,y,height=300)
+  def initialize(x,y,type)
     @move_flag = true
     @dy = 2
     @dx = 4
