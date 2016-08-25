@@ -7,7 +7,9 @@ Window.caption = "Ruby"
 Window.width = 800
 Window.height = 600
 
+bgm = Sound.new("musics/bgm.mid")
 
+bgm.play
 
 Scene.set_current_scene(:title)
 
