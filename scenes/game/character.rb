@@ -1,4 +1,4 @@
-require_relative 'scroll'
+ require_relative 'scroll'
 
 class Character < Sprite
   def initialize(x, y, image_file)
@@ -15,25 +15,25 @@ class Character < Sprite
 
   #落下
   def move_loop
-    @vy += @ay if @vy < 10
+    @vy += @ay if @vy < 8
     self.y += @vy
     # TODO: 天井に入り込まないようにする
     if self.y <= 0
-      @vy = -@vy
+      @vy = 5
     end
   end
 
   #操作
   def move_key
     if Input.keyPush?(K_SPACE) then
-      @vy = -15 
+      @vy = -15
     end
   end
 
   #ぶつかったか判定
   def hit(obj)
     @vy = 0
-    @ay = 0
+    #@ay = 0
     scroll = Game::Director.instance.scroll
     scroll.move_stop
   end

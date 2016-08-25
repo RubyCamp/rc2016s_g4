@@ -1,4 +1,5 @@
 class Scroll
+	attr_reader :move_flag
 	def initialize
 		@move_flag = false
 		@img1 = Image.load("images/background.png")
