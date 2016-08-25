@@ -15,7 +15,10 @@ module Game
     attr_reader :scroll
     def initialize
       @char = Character.new(400, 300, "images/char.png")
+      #@char.set_color_key([0, 0, 0])
       @bg_img = Image.load("images/background.png")
+      @ruby_img = Image.load("images/ruby_image.png")
+
       @game_over = false
     
       @lwalls = []
@@ -165,7 +168,8 @@ module Game
       Sprite.check(@char, @items, :get_item)
       Sprite.clean(@char)
 
-      Window.drawFont(10,10, "SCORE "+ @char.item_count.to_s,Font.new(40))
+      Window.draw(10,10,@ruby_img)
+      Window.drawFont(50,10, "×"+ $item_count.to_s,Font.new(40))
     end
 
     def game_over

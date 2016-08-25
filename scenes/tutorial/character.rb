@@ -4,7 +4,7 @@ module Tutorial
 		def initialize(x, y, image_file)
 			@x, @y = x, y
 			@image = Image.load(image_file)
-    		@image.set_color_key([255, 255, 255])
+    		@image.set_color_key([0, 0, 0])
     		#@dy = 10
     		@vy = 1
     		@ay = 1
