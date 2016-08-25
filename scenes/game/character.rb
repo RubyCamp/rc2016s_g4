@@ -27,6 +27,7 @@ class Character < Sprite
       if self.y + @image.height > Window.height
         Game::Director.instance.game_over
         @game_over = true
+        Scene.set_current_scene(:game_over)
       else
         self.y += @vy
       end
@@ -49,6 +50,7 @@ class Character < Sprite
     #@ay = 0
     Game::Director.instance.game_over
     @game_over = true
+    Scene.set_current_scene(:game_over)
   end
 
   def get_item(item)
