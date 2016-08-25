@@ -5,7 +5,7 @@ class Character < Sprite
   def initialize(x, y, image_file)
     @move_flag = true
     @image = Image.load(image_file)
-    @image.set_color_key([0, 0, 0])
+    @image.set_color_key([255, 255, 255])
     @vy = 1.5
     @ay = 1
     super(x,y,@image)
@@ -24,12 +24,12 @@ class Character < Sprite
       @vy += @ay if @vy < 8
       # TODO: 天井に入り込まないようにする
 
-      if self.y + @image.height > Window.height 
+      if self.y + @image.height > Window.height
         Game::Director.instance.game_over
         @game_over = true
-      else 
-        self.y += @vy 
-      end 
+      else
+        self.y += @vy
+      end
       if self.y <= 0
         @vy = 5
       end
@@ -53,7 +53,7 @@ class Character < Sprite
 
   def get_item(item)
     @item_count += 1
-    p @item_count 
+    p @item_count
   end
 
   def move_stop

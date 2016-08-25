@@ -4,7 +4,7 @@ module Tutorial
 		def initialize(x, y, image_file)
 			@x, @y = x, y
 			@image = Image.load(image_file)
-    		@image.set_color_key([0, 0, 0])
+    		@image.set_color_key([255, 255, 255])
     		#@dy = 10
     		@vy = 1
     		@ay = 1
@@ -17,8 +17,8 @@ module Tutorial
 			@vy += @ay if @vy < 2
     		@y += @vy
 
-			@vy = -12 if @y > (self.y + 50) - @image.height || @y < (self.y - 50) 
-				
+			@vy = -12 if @y > (self.y + 50) - @image.height || @y < (self.y - 50)
+
 			if @y >= self.y + 10			#追加
 				@sw = 0					#追加
 			else 							#追加
