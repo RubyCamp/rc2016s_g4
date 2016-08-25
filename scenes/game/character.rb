@@ -1,4 +1,5 @@
  require_relative 'scroll'
+ #sss
 
 class Character < Sprite
   attr_reader :item_count
