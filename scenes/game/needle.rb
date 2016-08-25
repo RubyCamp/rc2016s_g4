@@ -1,5 +1,5 @@
 class Needle < Sprite
-  HEIGHT = 200
+  HEIGHT = 100
   WIDTH = 100
 
   def initialize(x,y)

@@ -16,7 +16,7 @@ module Game
     
       @lwalls = []
       8.times.each do |i|
-        y = 400
+        y = 500
         y += Needle::HEIGHT / 2 if i.odd? #add 奇数の時ｙに足す. ::NeedleクラスのＨＥＩＧＨＴの変数を用いる
         @lwalls << Needle.new(Needle::WIDTH * i, y) #繰り返したい処理 <<lwallsnにどんどんクラスを入れていくときに用いる
         #@testsp = Sprite.new(400, 200, Image.load("../images/char.png"))
@@ -24,7 +24,7 @@ module Game
 
       @upwalls =[]
       8.times.each do |i|
-        y = -100
+        y = -50
         y += Needle::HEIGHT / 2 if i.odd? #add 奇数の時ｙに足す. ::NeedleクラスのＨＥＩＧＨＴの変数を用いる
         needle = Needle.new(Needle::WIDTH * i, y)
         needle.reverse!
