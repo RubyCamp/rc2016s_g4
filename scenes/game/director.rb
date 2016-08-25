@@ -41,8 +41,8 @@ module Game
       @third_walls.type = 3
 
       @items = []
-      10.times.each do
-        @items << Item.new(rand(800 * 3), rand(200) + (200))
+      100.times.each do
+        @items << Item.new(rand(800 * 3) + 450, rand(200) + (200))
       end
 
       @scroll = Scroll.new

@@ -37,7 +37,7 @@ class Press < Sprite
         # 上から下への上下
         # self.setHeight(600)
         self.y += @dy
-        @dy = -@dy if y > 0 || y < -400
+        @dy = -@dy if y > 50 || y < -400
       end
       self.x -= @dx
     end
