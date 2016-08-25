@@ -1,16 +1,16 @@
 ﻿module Title
  	class Director
     	def initialize
-    		@X = 330
+    		@X = 265
     		@Y = 100
-			@SX = 325
-			@SY = 500
+			@SX = 290
+			@SY = 450
     		@f = Font.new(32)
-			@sf = Font.new(20)
+			@sf = Font.new(30)
 			@alp = 0
 			@sw = 0
 	    	@bg_img = Image.load("images/background.png")
-	    	@title = "タイトル"
+	    	@title = "とびゆけ！ぷーすけ！"
 	    	@start = "please push space"
 	  	end
 
