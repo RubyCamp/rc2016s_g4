@@ -1,4 +1,4 @@
-require_relative '../scroll/scroll'
+require_relative 'scroll'
 
 class Character < Sprite
   def initialize(x, y, image_file)
@@ -7,6 +7,10 @@ class Character < Sprite
     @vy = 1.5
     @ay = 1
     super(x,y,@image)
+  end
+
+  #始め（説明）
+  def move_st
   end
 
   #落下

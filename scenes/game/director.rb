@@ -1,7 +1,7 @@
 require 'singleton'
-require_relative 'needle/needle'
-require_relative 'scroll/scroll'
-require_relative 'character/character'
+require_relative 'needle'
+require_relative 'scroll'
+require_relative 'character'
 
 module Game 
   class Director
