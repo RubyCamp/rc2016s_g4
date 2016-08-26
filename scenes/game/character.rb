@@ -54,7 +54,7 @@ class Character < Sprite
   def get_item(item)
     @get_bgm.play
     $item_count += 1
-    p $item_count
+    #p $item_count #Log_score
   end
 
   def move_stop
