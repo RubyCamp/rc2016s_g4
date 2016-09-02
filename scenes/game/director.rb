@@ -1,6 +1,5 @@
 require 'singleton'
 require_relative 'needle'
-require_relative 'scroll'
 require_relative 'press'
 require_relative 'item'
 require_relative 'character'
@@ -8,135 +7,131 @@ require_relative 'enemy_karasu'
 require_relative 'enemy_oni'
 require_relative 'enemy_ufo'
 
-
 module Game 
 	class Director
 	    include Singleton
-	    attr_reader :scroll
+	    attr_reader :char
 	    def initialize
-			@char = Character.new(400, 300, "images/char.png")
-			@bg_img = Image.load("images/background.png")
 			@ruby_img = Image.load("images/ruby_image.png")
-
-			@game_over = false
-
-			@lwalls = []
-			@upwalls =[]
 			@items = []
-			@next_upwalls = []
-			@next_dowalls = []
-			@third_walls = []
-
-			@enemy_karasus = []
-			@enemy_onis = []
-			@enemy_ufos = []
-
-			@pos = 0
-			@scroll = Scroll.new
-			@scroll.move_start
+			@walls = []
+			@enemys = []
 			@stop = false
+			@flg = true
 	    end
 
 	    def play
-
-			@pos += 4
-			if @pos % 2000 == 800
-			8.times do |i|
-				y = 400
-				y += Needle::HEIGHT / 2 if i.odd? #add 奇数の時ｙに足す. ::NeedleクラスのＨＥＩＧＨＴの変数を用いる
-				@lwalls << Needle.new(Needle::WIDTH * i + 800 + @pos, y) #繰り返したい処理 <<lwallsnにどんどんクラスを入れていくときに用いる
-				#@testsp = Sprite.new(400, 200, Image.load("../images/char.png"))
+			if @flg #一度だけ
+				@char = Character.new(400, $char_y_start)
+				@flg = false
 			end
-			8.times do |i|
-				y = -100
-				y += Needle::HEIGHT / 2 if i.odd? #add 奇数の時ｙに足す. ::NeedleクラスのＨＥＩＧＨＴの変数を用いる
-				needle = Needle.new(Needle::WIDTH * i + 800 * 3 + @pos, y)
-				needle.reverse!
-				@upwalls <<  needle#繰り返したい処理 <<lwallsnにどんどんクラスを入れていくときに用いる
+			
+			obj_new
+
+			if Input.keyPush?(K_RETURN)
+				@stop = true
 			end
-
-			@next_upwalls << Press.new(800 * 2 + @pos,-200, 1)
-
-			@next_dowalls << Press.new(800 * 4 + @pos,500, 2)
-
-			@third_walls << Press.new(800 * 5 + @pos,-200, 1)
-			@third_walls << Press.new(800 * 5 + @pos, 500, 2)
-
-			30.times do |i|
-				@items << Item.new(rand((@pos)..(800 * 5 + @pos)), rand(200) + (200))
+			if @stop == true && Input.keyPush?(K_SPACE)
+				@stop = false
 			end
-
-	        10.times.each do
-				@enemy_karasus << Enemy_karasu.new(rand(800 * 5) + (800 * 3),rand(300) + 200)
+			unless @stop
+				Sprite.update([@char, @walls, @enemys, @items])
+				Sprite.check((@walls + @enemys), @char)
+				Sprite.check(@char, @items)
+				Sprite.check(@walls, (@items + @enemys))
+				obj_vanish
+				Sprite.clean(@walls)
+				Sprite.clean(@enemys)
+				Sprite.clean(@items)
+				$scroll.move
 			end
-
-			5.times.each do
-				@enemy_onis << Enemy_oni.new(rand(800 * 5) + (800 * 4),rand(300) + 200)
-			end
-
-			5.times.each do
-				@enemy_ufos << Enemy_ufo.new(rand(800 * 5) + (800 * 4),rand(300) + 200)
-			end
-		end
-		@scroll.draw
-
-		if Input.keyPush?(K_RETURN)
-	      	@stop = true
-	        if @scroll.move_flag == true
-				@scroll.move_stop
-			end
-		end
-
-		if Input.keyPush?(K_SPACE) && scroll.move_flag == false && @game_over == false
-			@stop = false
-			@scroll.move_start
-		end        
-
-		unless @stop
-			@char.move_loop
-			@char.draw
-			@char.move_key
-			@char.draw
-		end
-		@char.draw
-
-		unless game_over? || @stop
-			Sprite.update(@lwalls)
-			Sprite.update(@upwalls)
-			Sprite.update(@next_dowalls)
-			Sprite.update(@next_upwalls)
-			Sprite.update(@third_walls)
-			Sprite.update(@items)
-			Sprite.update(@enemy_karasus)
-			Sprite.update(@enemy_onis)
-			Sprite.update(@enemy_ufos)
-		end
-
-			Sprite.draw(@items)
-			Sprite.draw(@enemy_karasus)
-			Sprite.draw(@enemy_onis)
-			Sprite.draw(@enemy_ufos)
-			Sprite.draw(@lwalls)
-			Sprite.draw(@upwalls)
-			Sprite.draw(@next_dowalls)
-			Sprite.draw(@next_upwalls)
-			Sprite.draw(@third_walls)
-
-			Sprite.check([@lwalls, @upwalls, @next_upwalls, @next_dowalls, @third_walls, @enemy_karasus, @enemy_onis, @enemy_ufos], @char)
-			Sprite.check(@char, @items, :get_item)
-			Sprite.clean(@char)
-
+			$scroll.draw
+			Sprite.draw([@char, @walls, @items, @enemys])
 			Window.draw(10,10,@ruby_img)
-			Window.drawFont(50,10, "×"+ $item_count.to_s,Font.new(40))
+			Window.drawFont(50,10, "×"+ @char.item_count.to_s,Font.new(40))
+			if @char.game_over
+				Scene.set_current_scene(:game_over)
+			end
 		end
 
-	    def game_over
-	      @game_over = true
-	      @scroll.move_stop
-	    end
+		private
+		def wall_new
+			x = 800
+			begin
+				a = rand(4)
+			end while a == @prev_wall
+			@prev_wall = a
+			case a
+				when 0 #下三角
+					8.times do |i|
+						y = 400
+						y += Needle::HEIGHT / 2 if i.odd? #奇数の時 生成場所のy座標を下へ
+						@walls << Needle.new(x + i * 100, y)
+					end
+				when 1 # 上三角
+					8.times do |i|
+						y = -100
+						y += Needle::HEIGHT / 2 if i.odd? #奇数の時 生成場所のｙ座標を下へ
+						needle = Needle.new(x + i * 100, y)
+						needle.reverse!
+						@walls <<  needle
+					end
+				when 2 # 上四角
+					y = -200
+					type = 1
+					@walls << Press.new(x, y, type)
+				when 3 # 下四角
+					y = 500
+					type = 2
+					@walls << Press.new(x, y, type)
+				end
+		end
 
-	    def game_over?
-	      return @game_over
-	    end
+		def enemys_new
+			karasus = (1..2)
+			oni = (1..2)
+			ufo = (1..2)
+			x = (800..1600)
+			y = (50..550)
+
+			karasus = rand(karasus)
+			karasus.times do
+				@enemys << Enemy_karasu.new(rand(x),rand(y))
+			end
+
+			oni = rand(oni)
+			oni.times do
+				@enemys << Enemy_oni.new(rand(x),rand(y))
+			end
+
+			ufo = rand(ufo)
+			ufo.times do
+				@enemys << Enemy_ufo.new(rand(x),rand(y))
+			end
+		end
+		def obj_vanish
+			(@walls + @enemys + @items).each do |obj|
+				if obj.x + obj.image.width < 0
+					obj.vanish
+				end
+			end
+    	end
+
+		def obj_new
+			flg = true
+			@walls.each do |wall|
+				if wall.x + wall.image.width <= 800
+					flg = true
+				else
+					flg = false
+				end
+			end
+			wall_new if flg
+			while @items.length <= 10 do
+				@items << Item.new(rand(800..1600), rand(600 - @ruby_img.height), @ruby_img)
+			end
+
+			enemys_new if flg#@enemys.length < 5
+		end
 	end
 end

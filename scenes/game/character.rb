@@ -1,67 +1,44 @@
- require_relative 'scroll'
-
 class Character < Sprite
-  attr_reader :item_count
-  def initialize(x, y, image_file)
-    @move_flag = true
-    @image = Image.load(image_file)
-    @image.set_color_key([0, 0, 0])
-    @vy = 1.5
-    @ay = 1
-    super(x,y,@image)
-    @game_over = false
-    $item_count = 0
-    @hit_bgm = Sound.new("musics/out.wav")
-    @get_bgm = Sound.new("musics/jewelry.wav")
-  end
+    attr_reader :item_count, :game_over
+    def initialize(x, y)
+        @image = Image.load("images/char.png")
+        @image.set_color_key([0, 0, 0])
+        @vy = -15
+        @ay = 1
+        super(x,y,@image)
+        @game_over = false
+        @item_count = 0
+        @hit_bgm = Sound.new("musics/out.wav")
+        @get_bgm = Sound.new("musics/jewelry.wav")
+    end
 
-  #落下
-  def move_loop
-    if @move_flag == true
-      return if @game_over
-      @vy += @ay if @vy < 8
-      # TODO: 天井に入り込まないようにする
-
-      if self.y + @image.height > Window.height
-        Game::Director.instance.game_over
-        @game_over = true
-        Scene.set_current_scene(:game_over)
-      else
+    #インデント処理
+    def update
+        @vy += @ay if @vy < 10 #落下 早すぎたら止める
+        if Input.keyPush?(K_SPACE)
+            @vy = -15 #ジャンプ
+        end
         self.y += @vy
-      end
-      if self.y <= 0
-        @vy = 5
-      end
+
+        if self.y < 0 #天井超えない
+            self.y = 0
+            @vy = 3
+        end
+        
+        if self.y + @image.height > Window.height
+            @game_over = true # 落下死
+        end
     end
-  end
 
-  #操作
-  def move_key
-    if Input.keyPush?(K_SPACE) then
-      @vy = -15
+    #ぶつかったか判定
+    def hit(obj)
+        @hit_bgm.play
+        @game_over = true
     end
-  end
 
-  #ぶつかったか判定
-  def hit(obj)
-    @hit_bgm.play
-    @vy = 0
-    Game::Director.instance.game_over
-    @game_over = true
-    Scene.set_current_scene(:game_over)
-  end
-
-  def get_item(item)
-    @get_bgm.play
-    $item_count += 1
-    #p $item_count #Log_score
-  end
-
-  def move_stop
-    @move_flag = false
-  end
-  def move_start
-    @move_flag = true
-  end
-
+    #アイテムゲット判定
+    def shot(item)
+        @get_bgm.play
+        @item_count += 1
+    end
 end
